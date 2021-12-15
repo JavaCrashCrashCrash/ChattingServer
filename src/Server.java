@@ -5,45 +5,27 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Server {
 	public static void main(String[] args) {
-		BufferedReader in = null;
-		BufferedWriter out = null;
+
 		ServerSocket listener = null;
 		Socket socket = null;
-		Scanner scanner = new Scanner(System.in);
+		System.out.println("HEllo");
 		try {
 			listener = new ServerSocket(9999);
 			System.out.println("Waiting connection");
-			socket = listener.accept();
-
-			System.out.println("Connection Success");
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			while (true) {
-				String inputMessage = in.readLine();
-				if (inputMessage.equalsIgnoreCase("Bye")) {
-					System.out.println("Closed by client via bye message");
-					break;
-				}
-				System.out.println("Client : " + inputMessage);
-				System.out.println("Send >> ");
-				String outputMessage = scanner.nextLine();
-				out.write(outputMessage + "\n");
-				out.flush();
+				socket = listener.accept();
+				Model.clients.add(socket);
+				SocketThread socketThread = new SocketThread(socket);
+				socketThread.start();
 			}
+
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
-		} finally {
-			try {
-				scanner.close();
-				socket.close();
-				listener.close();
-			} catch (IOException e) {
-				System.out.println("Error is occured for chating with client");
-			}
 		}
 	}
 }
