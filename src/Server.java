@@ -17,10 +17,12 @@ public class Server {
 		try {
 			listener = new ServerSocket(9999);
 			System.out.println("Waiting connection");
+			int count = 1;
 			while (true) {
 				socket = listener.accept();
+				System.out.println("Connection Success");
 				Model.clients.add(socket);
-				SocketThread socketThread = new SocketThread(socket);
+				SocketThread socketThread = new SocketThread(socket, ""+count++);
 				socketThread.start();
 			}
 

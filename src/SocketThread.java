@@ -4,12 +4,14 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class SocketThread extends Thread {
+    private String name;
     private Socket socket;
     private BufferedReader in = null;
     private BufferedWriter out = null;
 
-    public SocketThread(Socket socket) {
+    public SocketThread(Socket socket, String name) {
         this.socket = socket;
+        this.name = name;
     }
     public void run() {
         try {
@@ -18,11 +20,12 @@ public class SocketThread extends Thread {
 //            socket = listener.accept();
 //            clients.add(socket);
 
-            System.out.println("Connection Success");
+
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             while (true) {
                 String inputMessage = in.readLine();
+                System.out.println(name + " : " + inputMessage);
                 if (inputMessage.equalsIgnoreCase("Bye")) {
                     System.out.println("Closed by client via bye message");
                     break;
